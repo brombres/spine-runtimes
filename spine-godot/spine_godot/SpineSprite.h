@@ -31,6 +31,7 @@
 
 #include "SpineSkeleton.h"
 #include "SpineAnimationState.h"
+#include "core/variant/array.h"
 #include "scene/2d/node_2d.h"
 
 class SpineSlotNode;
@@ -102,6 +103,11 @@ public:
 					 const Vector<Color> &colors,
 					 const Vector<int> &indices,
 					 SpineRendererObject *renderer_object);
+
+	Array get_vertices() { return Variant(vertices); }
+	Array get_uvs() { return Variant(uvs); }
+	Array get_colors() { return Variant(colors); }
+	Array get_indices() { return Variant(indices); }
 };
 
 class SpineSprite : public Node2D,
@@ -138,7 +144,7 @@ protected:
 	Color debug_clipping_color;
 
 	spine::Vector<spine::Vector<SpineSlotNode *>> slot_nodes;
-	Vector<SpineMesh2D *> mesh_instances;
+	Array mesh_instances;
 	static Ref<CanvasItemMaterial> default_materials[4];
 	Ref<Material> normal_material;
 	Ref<Material> additive_material;
@@ -264,6 +270,8 @@ public:
 	Color get_debug_clipping_color() { return debug_clipping_color; }
 
 	void set_debug_clipping_color(const Color &color) { debug_clipping_color = color; }
+
+	Array get_meshes() { return mesh_instances; }
 
 #ifdef TOOLS_ENABLED
 	virtual Rect2 _edit_get_rect() const;

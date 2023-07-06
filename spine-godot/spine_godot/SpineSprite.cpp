@@ -121,6 +121,10 @@ void SpineMesh2D::_notification(int what) {
 }
 
 void SpineMesh2D::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("get_vertices"), &SpineMesh2D::get_vertices);
+	ClassDB::bind_method(D_METHOD("get_uvs"), &SpineMesh2D::get_uvs);
+	ClassDB::bind_method(D_METHOD("get_colors"), &SpineMesh2D::get_colors);
+	ClassDB::bind_method(D_METHOD("get_indices"), &SpineMesh2D::get_indices);
 }
 
 void SpineMesh2D::update_mesh(const Vector<Point2> &vertices,
@@ -294,6 +298,8 @@ void SpineSprite::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_debug_clipping_color", "v"), &SpineSprite::set_debug_clipping_color);
 	ClassDB::bind_method(D_METHOD("get_debug_clipping_color"), &SpineSprite::get_debug_clipping_color);
 
+	ClassDB::bind_method(D_METHOD("get_meshes"), &SpineSprite::get_meshes);
+
 	ClassDB::bind_method(D_METHOD("update_skeleton", "delta"), &SpineSprite::update_skeleton);
 	ClassDB::bind_method(D_METHOD("new_skin", "name"), &SpineSprite::new_skin);
 
@@ -464,8 +470,9 @@ void SpineSprite::generate_meshes_for_slots(Ref<SpineSkeleton> skeleton_ref) {
 
 void SpineSprite::remove_meshes() {
 	for (int i = 0; i < mesh_instances.size(); ++i) {
-		remove_child(mesh_instances[i]);
-		memdelete(mesh_instances[i]);
+		SpineMesh2D* mesh = (SpineMesh2D*)(Object*)mesh_instances[i];
+		remove_child(mesh);
+		memdelete(mesh);
 	}
 	mesh_instances.clear();
 	slot_nodes.clear();
@@ -492,7 +499,7 @@ void SpineSprite::sort_slot_nodes() {
 
 	for (int i = 0; i < (int) draw_order.size(); i++) {
 		int slot_index = draw_order[i]->getData().getIndex();
-		int mesh_index = mesh_instances[i]->get_index();
+		int mesh_index = ((SpineMesh2D*)(Object*)mesh_instances[i])->get_index();
 		spine::Vector<SpineSlotNode *> &nodes = slot_nodes[slot_index];
 		for (int j = 0; j < (int) nodes.size(); j++) {
 			auto node = nodes[j];
@@ -687,7 +694,7 @@ void SpineSprite::update_meshes(Ref<SpineSkeleton> skeleton_ref) {
 	for (int i = 0, n = (int) skeleton->getSlots().size(); i < n; ++i) {
 		spine::Slot *slot = skeleton->getDrawOrder()[i];
 		spine::Attachment *attachment = slot->getAttachment();
-		SpineMesh2D *mesh_instance = mesh_instances[i];
+		SpineMesh2D *mesh_instance = (SpineMesh2D*)(Object*)mesh_instances[i];
 		mesh_instance->renderer_object = nullptr;
 
 		if (!attachment) {
