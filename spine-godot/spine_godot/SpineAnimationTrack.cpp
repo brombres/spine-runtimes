@@ -1,4 +1,4 @@
-﻿#include "SpineAnimationTrack.h"
+#include "SpineAnimationTrack.h"
 #if VERSION_MAJOR > 3
 #include "core/config/engine.h"
 #else
@@ -8,7 +8,7 @@
 #include "scene/resources/animation.h"
 
 #ifdef TOOLS_ENABLED
-#include "godot/editor/editor_node.h"
+#include "editor/editor_node.h"
 #include "editor/plugins/animation_player_editor_plugin.h"
 #include "editor/plugins/animation_tree_editor_plugin.h"
 #endif

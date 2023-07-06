@@ -49,6 +49,7 @@
 #include "scene/main/viewport.h"
 
 #if TOOLS_ENABLED
+#include "editor/editor_interface.h"
 #include "editor/editor_plugin.h"
 #endif
 
